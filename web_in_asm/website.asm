@@ -3,6 +3,10 @@ format ELF64 executable
 ; Defining the constants for the SYS_calls
 SYS_write = 1
 SYS_exit = 60
+SYS_socket = 41
+
+AF_INET = 2
+SOCK_STREAM = 1
 
 ; writing the `write` syscall in C style using Macro Substitutions
 macro write fd, buf, count
@@ -29,13 +33,33 @@ macro exit code
   syscall
 }
 
+macro socket domain, type, protocol
+{
+  mov rax, SYS_socket
+  mov rdi, domain
+  mov rsi, type
+  mov rdx, protocol
+  syscall
+  ; After the syscall, the fd of the socket is kept in rax
+}
+
 segment readable writable executable
 entry main
 main:
-  write 1, msg, msg_len
+  write 1, start_msg, start_msg_len
+
+  ; Let's create a TCP web socket
+  socket AF_INET, SOCK_STREAM, 0
+  mov dword [sockfd], eax ;; do the 32-bit write
+  
   exit 0
   
-segment readable writable
-msg db "Hello World!", 10
-msg_len = $ - msg 
+;; db - 1 byte
+;; dw - 2 bytes
+;; dd - 4 bytes
+;; dq - 8 bytes
 
+segment readable writable
+sockfd dd 0 
+start_msg db "Starting web server!", 10
+start_msg_len = $ - start_msg 
