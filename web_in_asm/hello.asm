@@ -1,8 +1,8 @@
 format ELF64 executable
 
 ; Defining the constants for the SYS_calls
-SYS_write = 1
-SYS_exit = 60
+  SYS_write = 1
+  SYS_exit = 60
 
 ; writing the `write` syscall in C style using Macro Substitutions
 macro write fd, buf, count
@@ -38,4 +38,3 @@ main:
 segment readable writable
 msg db "Hello World!", 10
 msg_len = $ - msg 
-
