@@ -1,5 +1,9 @@
 format ELF64 executable
 
+;; ==============================================================
+;; Up next -> add routing by parsing the incoming request's route
+;; ==============================================================
+
 ; Defining the constants for the SYS_calls
 SYS_write equ 1
 SYS_exit equ 60
