@@ -4,4 +4,6 @@ set -xe
 
 as exit.s -o exit.o
 ld exit.o -o exit
-./exit
+
+as -g maximum.s -o maximum.o
+ld maximum.o -o maximum
