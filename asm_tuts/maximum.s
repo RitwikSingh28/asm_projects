@@ -16,7 +16,9 @@
 
   .section .data
 numbers:
-  .long 3, 23, 14, 53, 23, 64, 21, 192, 0
+  .long 3, 23, 14, 53, 23, 64, 21, 192, 255
+length:
+  .long 9
 
   .section .text
 
@@ -27,12 +29,12 @@ _start:
   movl %eax, %ebx
 
 loop_proc:
-  cmp $0, %eax
+  cmp length, %edi
   je exit
   incl %edi
   movl numbers(,%edi,4), %eax
   cmp %ebx, %eax
-  jle loop_proc
+  jge loop_proc
   movl %eax, %ebx
   jmp loop_proc
 
