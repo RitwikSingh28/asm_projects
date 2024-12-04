@@ -48,6 +48,45 @@ _start:
   #Allocate space for file descriptors on the stack
   subl $ST_SIZE_RESERVE, %esp
 
+  # Check if the argc is 0, if it is we would operate in cmdline mode
+  # else if argc == 2, then in file mode
+  movl ST_ARGC(%ebp), %eax
+  cmp $2, %eax
+  jge open_files
+  cmp $1, %eax
+  # If argc >= 2 || argc == 0, okay
+  # else exit the program directly
+  jne exit
+
+  ### CMDLINE MODE ### 
+  # Read syscall
+  movl $SYS_READ, %eax
+  # STDIN file descriptor in %ebx
+  movl $STDIN, %ebx
+  # Buffer data address in %ecx
+  movl $BUFFER_DATA, %ecx
+  # Buffer len in %edx
+  movl $BUFFER_SIZE, %edx
+  int $LINUX_SYSCALL
+
+  ### UPPERCASE CONVERSION IN BUFFER ### 
+  pushl $BUFFER_DATA
+  pushl %eax
+  call convert_to_upper
+
+  # resetting the stack
+  popl %eax
+  addl $4, %esp
+
+  # Writing to output now
+  movl $SYS_WRITE, %eax
+  movl $STDOUT, %ebx
+  movl $BUFFER_DATA, %ecx
+  movl $BUFFER_SIZE, %edx
+  int $LINUX_SYSCALL
+
+  jmp exit
+
 open_files:
 open_fd_in:
   ## OPEN INPUT FILE ##
@@ -132,6 +171,7 @@ end_loop:
   movl ST_FD_IN(%ebp), %ebx
   int $LINUX_SYSCALL
 
+exit:
   ### EXIT ###
   movl $SYS_EXIT, %eax
   movl $0, %ebx
