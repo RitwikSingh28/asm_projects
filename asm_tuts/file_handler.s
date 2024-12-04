@@ -137,6 +137,8 @@ end_loop:
   movl $0, %ebx
   int $LINUX_SYSCALL
 
+  # ===================================================================
+ 
   .equ LOWERCASE_A, 'a'   # The lower boundary of our search
   .equ LOWERCASE_Z, 'z'   # The upper boundary of our search
   .equ UPPER_CONVERSION, 'A' - 'a'
