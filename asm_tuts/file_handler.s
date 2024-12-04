@@ -51,7 +51,7 @@ _start:
   # Check if the argc is 0, if it is we would operate in cmdline mode
   # else if argc == 2, then in file mode
   movl ST_ARGC(%ebp), %eax
-  cmp $2, %eax
+  cmp $3, %eax
   jge open_files
   cmp $1, %eax
   # If argc >= 2 || argc == 0, okay
