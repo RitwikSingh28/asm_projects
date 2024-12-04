@@ -2,8 +2,15 @@
 
 set -xe
 
-as exit.s -o exit.o
-ld exit.o -o exit
+as exit.s -o ./binaries/exit.o
+ld ./binaries/exit.o -o ./binaries/exit
 
-as -g maximum.s -o maximum.o
-ld maximum.o -o maximum
+as -g maximum.s -o ./binaries/maximum.o
+ld ./binaries/maximum.o -o ./binaries/maximum
+
+# generate a 32-bit object file
+as -g --32 power.s -o ./binaries/power.o
+ld -m elf_i386 ./binaries/power.o -o ./binaries/power
+
+as -g --32 factorial.s -o ./binaries/factorial.o
+ld -m elf_i386 ./binaries/factorial.o -o ./binaries/factorial
